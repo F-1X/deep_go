@@ -7,19 +7,47 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Реализуйте функцию func Map(data \[\]int, action func(int) int) \[\]int,
+// которая принимает функцию action и срез данных data.
+// Функция Map должна применить функцию action к каждому элементу среза data и вернуть новый срез с результатами.
 func Map(data []int, action func(int) int) []int {
-	// need to implement
-	return nil
+	if data == nil {
+		return nil
+	}
+	for i := 0; i < len(data); i++ {
+		data[i] = action(data[i])
+	}
+	newData := make([]int, len(data))
+	copy(newData, data)
+	return newData
 }
 
+// Реализуйте функцию func Filter(data \[\]int, action func(int) bool) \[\]int,
+// которая принимает функцию action и срез данных data.
+// Функция Filter должна вернуть новый срез, содержащий только те элементы data, для которых функция action возвращает true.
 func Filter(data []int, action func(int) bool) []int {
-	// need to implement
-	return nil
+	if data == nil {
+		return nil
+	}
+	newData := make([]int, 0)
+	i := 0
+	for ; i < len(data); i++ {
+		if action(data[i]) {
+			newData = append(newData, data[i])
+		}
+	}
+	return newData
 }
 
+// Реализуйте функцию func Reduce(data \[\]int, initial int, action func(int, int) int) int,
+// которая принимает функцию action (функцию двух аргументов), срез данных data и начальное значение initial.
+// Функция Reduce должна применить функцию action к каждому элементу data и начальному значению initial, накапливая результат.
 func Reduce(data []int, initial int, action func(int, int) int) int {
-	// need to implement
-	return 0
+	cum := 0
+	for i := 0; i < len(data); i++ {
+		cum = action(cum, data[i])
+	}
+	return action(cum, initial)
 }
 
 func TestMap(t *testing.T) {
