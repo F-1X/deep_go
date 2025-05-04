@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,21 +19,29 @@ type MessageService struct {
 }
 
 type Container struct {
-	// need to implement
+	types map[string]any
 }
 
-func NewContainer() *Container {
-	// need to implement
-	return &Container{}
+func NewContainer() *Container { // создать DI контейнер
+	return &Container{
+		types: map[string]any{},
+	}
 }
 
-func (c *Container) RegisterType(name string, constructor interface{}) {
-	// need to implement
+func (c *Container) RegisterType(name string, constructor interface{}) { // зарегистрировать конструктор по созданию типа
+	c.types[name] = constructor
 }
 
-func (c *Container) Resolve(name string) (interface{}, error) {
-	// need to implement
-	return nil, nil
+func (c *Container) Resolve(name string) (interface{}, error) { // создать объект с использованием конструктора
+	constructor, ok := c.types[name]
+	if !ok {
+		return nil, fmt.Errorf("not found")
+	}
+	constructorFunc, ok := constructor.(func() interface{})
+	if !ok {
+		return nil, fmt.Errorf("bad func")
+	}
+	return constructorFunc(), nil
 }
 
 func TestDIContainer(t *testing.T) {
